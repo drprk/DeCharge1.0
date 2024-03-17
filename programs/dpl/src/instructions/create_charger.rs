@@ -1,28 +1,19 @@
-use std::str::FromStr;
-
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use anchor_spl::token::{Mint, Token};
 
-use crate::{constants::DEFAULT_TOKEN_MINT, state::charger::Charger};
+use crate::state::charger::Charger;
 
 pub fn create_charger_ix(ctx: Context<CreateCharger>) -> Result<()> {
-    let charger = &ctx.accounts.charger;
     let charger_pda = &mut ctx.accounts.charger_pda;
-    let mint = &ctx.accounts.mint;
     let nft_mint = &ctx.accounts.nft_mint;
-
-    require!(
-        mint.key() == Pubkey::from_str(DEFAULT_TOKEN_MINT).unwrap(),
-        crate::errors::DplError::InvalidMint
-    );
 
     let clock: Clock = Clock::get()?;
 
-    charger_pda.pubkey = *charger.key;
+    charger_pda.pubkey = *ctx.accounts.charger.key;
+    charger_pda.operator = *ctx.accounts.operator.key;
     charger_pda.created_at = clock.unix_timestamp;
     charger_pda.nft_mint = nft_mint.key();
     charger_pda.all_time_revenue = 0;
-    charger_pda.revenue_to_pay = 0;
 
     Ok(())
 }
@@ -41,16 +32,7 @@ pub struct CreateCharger<'info> {
         space = Charger::LEN,
     )]
     pub charger_pda: Account<'info, Charger>,
-    #[account(
-        init,
-        payer = payer,
-        seeds = [b"vault".as_ref(), charger.key().as_ref(), mint.key().as_ref()],
-        bump,
-        token::mint = mint,
-        token::authority = charger_pda
-    )]
-    pub vault: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
+    pub operator: AccountInfo<'info>,
     pub nft_mint: Account<'info, Mint>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
