@@ -1,20 +1,59 @@
 use std::str::FromStr;
 
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use anchor_spl::{
+    token::{transfer_checked, Mint, Token, TokenAccount, TransferChecked},
+    token_2022,
+};
 
-use crate::{constants::DEFAULT_TOKEN_MINT, state::charger::Charger};
+use crate::{constants::DEFAULT_TOKEN_MINT, errors::DplError, state::charger::Charger};
 
-pub fn charger_session(ctx: Context<ChargerSession>) -> Result<()> {
+pub fn charger_session(ctx: Context<ChargerSession>, amount: u64) -> Result<()> {
     let mint = &ctx.accounts.mint;
+    let user = &ctx.accounts.user;
+    let user_ata = &ctx.accounts.user_ata;
+    let operator_ata = &ctx.accounts.operator_ata;
+    let nft_mint_owner_ata = &ctx.accounts.nft_mint_owner_ata;
+    let token_program = ctx.accounts.token_program.to_account_info();
+    let charger_pda = &mut ctx.accounts.charger_pda;
 
     require!(
         mint.key() == Pubkey::from_str(DEFAULT_TOKEN_MINT).unwrap(),
-        crate::errors::DplError::InvalidMint
+        DplError::InvalidMint
     );
 
-    // transfer from user ata to nft mint owner ata (70%) and operator ata (30%), take amount as an argument or take some time as an argument and make like 1 minute = 0.5 usdc
-    // update the all time revenue in charger pda
+    require!(amount > 0, DplError::InvalidAmount);
+    require!(user_ata.amount >= amount as u64, DplError::InvalidAmount);
+
+    transfer_checked(
+        CpiContext::new(
+            token_program.to_account_info(),
+            TransferChecked {
+                from: user_ata.to_account_info(),
+                mint: mint.to_account_info(),
+                to: operator_ata.to_account_info(),
+                authority: user.to_account_info(),
+            },
+        ),
+        amount * 0.3 as u64 * 10_u64.pow(mint.decimals.into()),
+        mint.decimals,
+    )?;
+
+    transfer_checked(
+        CpiContext::new(
+            token_program.to_account_info(),
+            TransferChecked {
+                from: user_ata.to_account_info(),
+                mint: mint.to_account_info(),
+                to: nft_mint_owner_ata.to_account_info(),
+                authority: user.to_account_info(),
+            },
+        ),
+        amount * 0.7 as u64 * 10_u64.pow(mint.decimals.into()),
+        mint.decimals,
+    )?;
+
+    charger_pda.all_time_revenue += amount;
 
     Ok(())
 }

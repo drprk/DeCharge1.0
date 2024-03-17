@@ -6,4 +6,6 @@ pub enum DplError {
     PhoneNumberHash32Bytes,
     #[msg("Invalid mint")]
     InvalidMint,
+    #[msg("Invalid amount")]
+    InvalidAmount,
 }
