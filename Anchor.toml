@@ -1,15 +1,15 @@
 [features]
 seeds = false
 skip-lint = false
-[programs.localnet]
-dpl = "6NumYGQrACaBTDiNwHyvmWihxejgGHDMJrEQYD7sTBN9"
+[programs.devnet]
+dpl = "MfQ5MtGrou6TxQuBSGAFiQMuPTUWe7Y7kscbswUw31c"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
-wallet = "/Users/anish/.config/solana/id.json"
+cluster = "devnet"
+wallet = "/Users/sahilpabale/wallets/dpl/DPLHJZ1qRei383WVnbR4Q4d98UwQvVGW92Rv8iPz1yei.json"
 
 [scripts]
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000"

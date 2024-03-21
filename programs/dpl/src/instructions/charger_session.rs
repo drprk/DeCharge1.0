@@ -1,14 +1,11 @@
 use std::str::FromStr;
 
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    token::{transfer_checked, Mint, Token, TokenAccount, TransferChecked},
-    token_2022,
-};
+use anchor_spl::token::{transfer_checked, Mint, Token, TokenAccount, TransferChecked};
 
 use crate::{constants::DEFAULT_TOKEN_MINT, errors::DplError, state::charger::Charger};
 
-pub fn charger_session(ctx: Context<ChargerSession>, amount: u64) -> Result<()> {
+pub fn charger_session_ix(ctx: Context<ChargerSession>, amount: u64) -> Result<()> {
     let mint = &ctx.accounts.mint;
     let user = &ctx.accounts.user;
     let user_ata = &ctx.accounts.user_ata;
@@ -67,6 +64,7 @@ pub struct ChargerSession<'info> {
         token::authority = user
     )]
     pub user_ata: Account<'info, TokenAccount>,
+    /// CHECK: charger unsafe acc
     pub charger: AccountInfo<'info>,
     #[account(
         seeds = [b"charger", charger.key().as_ref()],
@@ -75,12 +73,14 @@ pub struct ChargerSession<'info> {
     pub charger_pda: Account<'info, Charger>,
     pub mint: Account<'info, Mint>,
     pub nft_mint: Account<'info, Mint>,
+    /// CHECK: nft_mint_owner unsafe acc
     pub nft_mint_owner: AccountInfo<'info>,
     #[account(
         token::mint = mint,
         token::authority = nft_mint_owner
     )]
     pub nft_mint_owner_ata: Account<'info, TokenAccount>,
+    /// CHECK:
     pub operator: AccountInfo<'info>,
     #[account(
         token::mint = mint,

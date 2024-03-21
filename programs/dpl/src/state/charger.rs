@@ -11,5 +11,5 @@ pub struct Charger {
 }
 
 impl Charger {
-    pub const LEN: usize = 8 + 32 + 32 + 8 + 8 + 8;
+    pub const LEN: usize = 8 + 32 + 8 + 32 + 32 + 8;
 }

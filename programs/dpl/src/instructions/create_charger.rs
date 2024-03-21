@@ -1,11 +1,20 @@
-use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token};
-
+use crate::errors::DplError;
 use crate::state::charger::Charger;
+
+use anchor_lang::prelude::*;
+use anchor_spl::token::Token;
 
 pub fn create_charger_ix(ctx: Context<CreateCharger>) -> Result<()> {
     let charger_pda = &mut ctx.accounts.charger_pda;
     let nft_mint = &ctx.accounts.nft_mint;
+    let payer = &ctx.accounts.payer.key();
+
+    msg!("nft mint owner {}", &nft_mint.owner);
+    msg!("payer {}", payer);
+    msg!("charger {}", &ctx.accounts.charger.key);
+    msg!("charger pda {}", &charger_pda.key());
+
+    // require!(&nft_mint.owner.eq(payer), DplError::InvalidMint);
 
     let clock: Clock = Clock::get()?;
 
@@ -32,8 +41,11 @@ pub struct CreateCharger<'info> {
         space = Charger::LEN,
     )]
     pub charger_pda: Account<'info, Charger>,
+    /// CHECK: operator unsafe acc
     pub operator: AccountInfo<'info>,
-    pub nft_mint: Account<'info, Mint>,
+
+    /// CHECK: nft mint address
+    pub nft_mint: AccountInfo<'info>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 }

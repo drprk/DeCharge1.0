@@ -5,10 +5,11 @@ pub mod errors;
 pub mod instructions;
 pub mod state;
 
+use instructions::charger_session::*;
 use instructions::create_charger::*;
 use instructions::create_user::*;
 
-declare_id!("6NumYGQrACaBTDiNwHyvmWihxejgGHDMJrEQYD7sTBN9");
+declare_id!("MfQ5MtGrou6TxQuBSGAFiQMuPTUWe7Y7kscbswUw31c");
 
 #[program]
 pub mod dpl {
@@ -20,6 +21,10 @@ pub mod dpl {
 
     pub fn create_charger(ctx: Context<CreateCharger>) -> Result<()> {
         create_charger_ix(ctx)
+    }
+
+    pub fn charger_session(ctx: Context<ChargerSession>, amount: u64) -> Result<()> {
+        charger_session_ix(ctx, amount)
     }
 }
 
