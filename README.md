@@ -36,6 +36,12 @@ The deCharge program exposes three main entry points:
 3. `charger_session`: Initiates a charging session with the specified amount.
 
 ### Accounts and PDA
+
+Program ID:
+```md
+MfQ5MtGrou6TxQuBSGAFiQMuPTUWe7Y7kscbswUw31c
+```
+
 User PDA:
 ```js
 web3.PublicKey.findProgramAddressSync(

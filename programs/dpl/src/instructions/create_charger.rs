@@ -1,4 +1,3 @@
-use crate::errors::DplError;
 use crate::state::charger::Charger;
 
 use anchor_lang::prelude::*;
