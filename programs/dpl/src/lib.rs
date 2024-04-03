@@ -9,7 +9,7 @@ use instructions::charger_session::*;
 use instructions::create_charger::*;
 use instructions::create_user::*;
 
-declare_id!("A844xykG4pu51sT6jGMFD9ZdmX7SbomBQKDvyuC379DC");
+declare_id!("3qUwvcPVu8LLbjgZmNeMkfkTbVhXWoLmuwiJ3XHscawC");
 
 #[program]
 pub mod dpl {
@@ -27,6 +27,3 @@ pub mod dpl {
         charger_session_ix(ctx, amount)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
