@@ -9,7 +9,7 @@ use instructions::charger_session::*;
 use instructions::create_charger::*;
 use instructions::create_user::*;
 
-declare_id!("MfQ5MtGrou6TxQuBSGAFiQMuPTUWe7Y7kscbswUw31c");
+declare_id!("A844xykG4pu51sT6jGMFD9ZdmX7SbomBQKDvyuC379DC");
 
 #[program]
 pub mod dpl {

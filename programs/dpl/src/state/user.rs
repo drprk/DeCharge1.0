@@ -8,5 +8,5 @@ pub struct User {
 }
 
 impl User {
-    pub const LEN: usize = 8 + 32 + 8 + (4 + (4 * 64));
+    pub const LEN: usize = 8 + 32 + 8 + (4 + (4 * 128));
 }
