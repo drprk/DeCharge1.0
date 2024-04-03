@@ -9,7 +9,7 @@ pub fn create_user_ix(ctx: Context<CreateUser>, phone_number_hash: String) -> Re
     let clock: Clock = Clock::get()?;
 
     require!(
-        phone_number_hash.len() == 32,
+        phone_number_hash.len() == 64,
         DplError::PhoneNumberHash32Bytes
     );
 
