@@ -39,7 +39,7 @@ The deCharge program exposes three main entry points:
 
 Program ID:
 ```md
-MfQ5MtGrou6TxQuBSGAFiQMuPTUWe7Y7kscbswUw31c
+8uwxL2etDeowSko5FXiZLfUJCU9qwFQsmsqrLKjQpFV4
 ```
 
 User PDA:
